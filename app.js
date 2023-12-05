@@ -1,18 +1,15 @@
-//Set up DOM so content is viewable within the console & browser and runs passed in 'init' fun. 
 window.addEventListener('DOMContentLoaded', init);
 
-//Calculator Values
+//Values
 const opts = ['*', '/', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']; //All keys
 const spec = ['*', '/', '+', '-']; //Special function keys
 
-function addOutput () {
-    
-}
 
 function init () {
 
     document.title = "JS Calculator"
-    console.log('ready')
+    let dec = false; 
+    let eva = false; 
 
     //Document Styling
     const container = document.createElement('div');
@@ -43,10 +40,38 @@ function init () {
     styleMain.width = '100%';
     container.appendChild(main);
 
+    //Create Keys & Functionality 
     opts.forEach(function(val) {
-        console.log(val);
+        //console.log(val);
         btnMaker(val, addOutput);
     });
+
+    btnMaker('=', evalOutput);
+    btnMaker('C', clearOutput);
+
+    function colourOutput (v) {
+        styleOutput.border = v + '1px solid';
+        styleOutput.color = v;
+    };
+
+    function evalOutput () {
+        colourOutput('black');
+        console.log('=');
+
+        if(output.value==="") {
+            colourOutput('red');
+        } else if(eva) {
+            colourOutput('red');
+        } else {
+            output.value = eval(output.value);
+        }
+        dec = output.value.includes('.');
+    };
+
+    function clearOutput () {
+        colourOutput('black');
+        output.value = "";
+    };
 
     function btnMaker (txt, myFunction) {
         let btn = document.createElement('button');
@@ -65,5 +90,25 @@ function init () {
         main.appendChild(btn);
     };
 
+    function addOutput (e) {
+        colourOutput('black');
+        let char = e.target.val;
+
+        if(char == ".") {
+            if(dec) {
+                char = "";
+                colourOutput('red');
+            } else {
+               dec = true;
+            }
+        };
+
+        eva = spec.includes(char);
+        if(eva) {
+            dec = false;
+        };
+
+        output.value += char;
+    };
 };
 
